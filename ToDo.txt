@@ -1,0 +1,48 @@
+
+Bugs:
+
+
+To Do:
+    
+    Test that OPs affect CPSR
+    Test Extream values for OPs
+    Create PDF Manual
+    Comment Code!!
+    
+    Add comment syntax to object files ( /*  */ )
+     - with nested comments
+    Debug Mode
+    Implement Stack
+    (Maybe) make addressing tryte addressable instead of word addressable
+
+
+Long Term:
+
+    Implement Heap
+    Get More Registers!
+
+
+Rejected:
+    Need to integrate Ops under Emu
+
+
+Done:
+
+    Make OPs affect CPSR
+    Fill out Ops
+    Jump Instruction
+     - Needs to be tested
+    Make RAM print out in order
+    Find way to make verbatim work without exec ( print program as Assembly )
+    Make Ops class instances
+    Make instruction class
+    Continuous Running of Obj file
+    Custom Exceptions
+    Make Proper Project Structure
+    Safeguard Emu registers
+    Check Op matches AM
+    More Address Modes
+    Verbose for AM Resolved Instructions
+     - give ops sense of how many oprs they need
+     - give ops sense of which AM are appropriate
+
