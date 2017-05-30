@@ -24,9 +24,9 @@ def print_table2( foo ):
 def _basic_AND( a, b ):
     if a == 0 or b == 0:
         return 0
-    if a == 1:
+    if a == 1 or b == 1:
         return 1
-    return b
+    return 2
     
 # Multi-input AND gates are just iterations of basic AND
 def AND( *args ):
@@ -144,7 +144,7 @@ def _basic_SIGN( a, b ):
 # Multi-input SIGN gates combine basic SIGN gates then perform IS_T
 def SIGN( *args ):
     if len(args) == 0:
-        return 0
+        return 1
     if len(args) == 1:
         return args[0]
         
@@ -153,7 +153,12 @@ def SIGN( *args ):
     for a in args[2:]:
         rtrn_val = _basic_SIGN( rtrn_val, a )
         
-    return IS_T( rtrn_val )
+    rtrn_val = IS_T( rtrn_val )
+    is_zero = AND(*map(IS_F, args))
+    
+    rtrn_val = AND( M_SHFT(rtrn_val), NOT(IS_T(is_zero)) )
+    
+    return P_SHFT( rtrn_val )
 
 
 
