@@ -264,8 +264,7 @@ def CLEAR( dest ):
     dest.val = 0
     return
     
-# Returns the sign of the value in the register, 0 for positive, 2 for negative.
-# Will not return 1.
+# Returns the sign of the value in the register, 0 for positive, 1 for zero, 2 for negative.
 def SIGN( reg ):
     
     sign = Gates.SIGN( *[ int( i ) for i in reg.tern ] )

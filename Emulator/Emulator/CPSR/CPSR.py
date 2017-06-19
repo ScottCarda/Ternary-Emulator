@@ -23,6 +23,48 @@ Conditions:
     NV  222:    Never
 '''
 
+def CPSR_Table():
+    cpsr = CPSR()
+    
+    conditions = [cond for cond in cpsr.cond]
+    conditions.sort()
+    
+    print( ( '|' + '*'*3 )*3 + '|' + ( '|' + '*'*3 )*16 + '|' )
+    
+    print( '| S | C | V ||', end = '' )
+    print( ' AL|', end = '' )
+    print( ' EQ|', end = '' )
+    print( ' CC|', end = '' )
+    print( ' MI|', end = '' )
+    print( ' VC|', end = '' )
+    print( ' LS|', end = '' )
+    print( ' LT|', end = '' )
+    print( ' LE|', end = '' )
+    print( ' GT|', end = '' )
+    print( ' GE|', end = '' )
+    print( ' HI|', end = '' )
+    print( ' VS|', end = '' )
+    print( ' PL|', end = '' )
+    print( ' CS|', end = '' )
+    print( ' NE|', end = '' )
+    print( ' NV|' )
+    
+    print( ( '|' + '*'*3 )*3 + '|' + ( '|' + '*'*3 )*16 + '|' )
+    
+    for s in range(3):
+        cpsr.S = s
+        for c in range(3):
+            cpsr.C = c
+            for v in range(3):
+                cpsr.V = v
+            
+                print( '| ' + str(cpsr.S) + ' | ' + str(cpsr.C) + ' | ' + str(cpsr.V) + ' ||', end = '' )
+                for condcode in conditions:
+                    print( ' ' + ( 'X' if cpsr.cond[condcode]() else '-' ) + ' |', end = '' )
+                print( '' )
+    
+    print( ( '|' + '*'*3 )*3 + '|' + ( '|' + '*'*3 )*16 + '|' )
+
 class CPSR(object):
     
     from .Cond import   \

@@ -1,6 +1,7 @@
 
 Bugs:
 
+    There may be bugs in how the Overflow and Carry flags are calculated. I don't know for sure. I really need to learn more about when these flags are supposed to be set.
 
 To Do:
     
@@ -9,8 +10,6 @@ To Do:
     Create PDF Manual
     Comment Code!!
     
-    Add comment syntax to object files ( /*  */ )
-     - with nested comments
     Debug Mode
     Implement Stack
     (Maybe) make addressing tryte addressable instead of word addressable
@@ -23,7 +22,10 @@ Long Term:
 
 
 Rejected:
+
     Need to integrate Ops under Emu
+    Add comment syntax to object files ( /*  */ )
+     - with nested comments
 
 
 Done:
