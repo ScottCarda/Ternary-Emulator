@@ -1,4 +1,4 @@
-from ..ALU.Gates import IS_F
+from ..ALU.Gates import IS_F, IS_T
 
 '''
 Conditions:
@@ -6,17 +6,17 @@ Conditions:
     AL:    Always
     EQ:    Equal ( S flag = 1 )
     CC:    Carry Clear ( C flag = 0 )
-    MI:    Negative ( S flag = 0 )
+    MI:    Negative ( S flag = 2 )
     VC:    Overflow Clear ( V flag = 0 )
     LS:    Unsigned Lower ( C flag = 0, OR S flag = 1 )
-    LT:    < ( IS_F(S flag) = IS_F(V flag) )    
-    LE:    <= ( S flag = 1 OR IS_F(S flag) = IS_F(V flag) )
+    LT:    < ( IS_T(S flag) = IS_F(V flag) )
+    LE:    <= ( S flag = 1 OR IS_T(S flag) = IS_F(V flag) )
     
-    GT:    > ( S flag = 1 AND IS_F(S flag) != IS_F(V flag) )
-    GE:    >= ( IS_F(S flag) != IS_F(V flag) )
+    GT:    > ( S flag != 1 AND IS_T(S flag) != IS_F(V flag) )
+    GE:    >= ( IS_T(S flag) != IS_F(V flag) )
     HI:    Unsigned Higher ( C flag != 0 AND S flag != 1 )
     VS:    Overflow Set ( V flag != 0 )
-    PL:    Positive ( S flag != 0 ) - maybe: ( S flag = 2 )
+    PL:    Positive ( S flag != 2 )
     CS:    Carry Set ( C flag != 0 )
     NE:    Not Equal ( S flag != 1 )
     NV:    Never
@@ -35,7 +35,7 @@ def CC(self):
 CC.name = 'CC'
     
 def MI(self):
-    return self.S == 0
+    return self.S == 2
 MI.name = 'MI'
     
 def VC(self):
@@ -47,11 +47,11 @@ def LS(self):
 LS.name = 'LS'
         
 def LT(self):
-    return IS_F(self.S) == IS_F(self.V)
+    return IS_T(self.S) == IS_F(self.V)
 LT.name = 'LT'
         
 def LE(self):
-    return self.S == 1 or IS_F(self.S) == IS_F(self.V)
+    return self.S == 1 or IS_T(self.S) == IS_F(self.V)
 LE.name = 'LE'
         
 

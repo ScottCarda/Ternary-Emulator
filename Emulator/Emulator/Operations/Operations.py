@@ -45,22 +45,21 @@ Opcodes:
 '''
 
 class Operation(object):
-    def __init__( self, func, name, num_args, AMs = normal_AMs, always_exec = False, is_jump = False, opr2_update = False ):
+    def __init__( self, func, name, num_args, AMs = normal_AMs, always_exec = False, is_jump = False ):
         self.__func = func
         self.name = name
         self.num_args = num_args
         self.AMs = AMs
         self.always_exec = always_exec
         self.is_jump = is_jump
-        self.opr2_update = opr2_update
         
     def __call__( self, CPSR, DEST, OPR1, OPR2, RAM ):
         return self.__func( CPSR, DEST, OPR1, OPR2, RAM )
      
-def makeOperation( name, num_args, AMs = normal_AMs, always_exec = False, is_jump = False, opr2_update = False ):
+def makeOperation( name, num_args, AMs = normal_AMs, always_exec = False, is_jump = False ):
     def temp( func ):
 
-        wrapper = Operation( func, name, num_args, AMs, always_exec, is_jump, opr2_update )
+        wrapper = Operation( func, name, num_args, AMs, always_exec, is_jump )
         
         return wrapper
     return temp
@@ -112,70 +111,70 @@ def SUB( CPSR, DEST, OPR1, OPR2, RAM ):
     CPSR.S = ALU.SIGN( DEST )
 # Updates the ALL flags according to the new value of DEST
     
-@makeOperation( 'MOVE ', 2, opr2_update = True )
+@makeOperation( 'MOVE ', 2 )
 def MOVE( CPSR, DEST, OPR1, OPR2, RAM ):
     DEST.hept = OPR2.hept
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
         
-@makeOperation( 'AND  ', 3, opr2_update = True )
+@makeOperation( 'AND  ', 3 )
 def AND( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.AND( DEST, OPR1, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'OR   ', 3, opr2_update = True )
+@makeOperation( 'OR   ', 3 )
 def OR( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.OR( DEST, OPR1, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'XOR  ', 3, opr2_update = True )
+@makeOperation( 'XOR  ', 3 )
 def XOR( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.XOR( DEST, OPR1, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'F_NOT', 2, opr2_update = True )
+@makeOperation( 'F_NOT', 2 )
 def F_NOT( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.F_NOT( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'N_NOT', 2, opr2_update = True )
+@makeOperation( 'N_NOT', 2 )
 def N_NOT( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.N_NOT( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'T_NOT', 2, opr2_update = True )
+@makeOperation( 'T_NOT', 2 )
 def T_NOT( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.T_NOT( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
 
-@makeOperation( 'IS_F ', 2, opr2_update = True )
+@makeOperation( 'IS_F ', 2 )
 def ISF( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.ISF( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'IS_N ', 2, opr2_update = True )
+@makeOperation( 'IS_N ', 2 )
 def ISN( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.ISN( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'IS_T ', 2, opr2_update = True )
+@makeOperation( 'IS_T ', 2 )
 def IST( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.IST( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
@@ -197,14 +196,14 @@ def LSL( CPSR, DEST, OPR1, OPR2, RAM ):
     CPSR.C = ALU.LSL( DEST, OPR1, OPR2 )
 # Updates the C flag to be the last bit shifted out
     
-@makeOperation( 'SHFTM', 2, opr2_update = True )
+@makeOperation( 'SHFTM', 2 )
 def SHIFT_M( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.SHIFT_M( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )
 # Updates the S flag according to the new value of DEST
 # Updates the C flag during calculation of OPR2 - happens before function call
     
-@makeOperation( 'SHFTP', 2, opr2_update = True )
+@makeOperation( 'SHFTP', 2 )
 def SHIFT_P( CPSR, DEST, OPR1, OPR2, RAM ):
     ALU.SHIFT_P( DEST, OPR2 )
     CPSR.S = ALU.SIGN( DEST )

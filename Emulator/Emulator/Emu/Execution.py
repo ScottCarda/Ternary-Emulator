@@ -112,7 +112,7 @@ def do_instr( self, instr ):
             tDEST = Register()
             
         # if the operation sets the carry flag based on the calculation of OPR2
-        if OP_func.opr2_update == True:
+        if carry != -1:
             tCPSR.C = carry
             
     else: # manage jump special case

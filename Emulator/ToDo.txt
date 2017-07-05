@@ -1,8 +1,3 @@
-
-Bugs:
-
-    There may be bugs in how the Overflow and Carry flags are calculated. I don't know for sure. I really need to learn more about when these flags are supposed to be set.
-
 To Do:
     
     Test that OPs affect CPSR

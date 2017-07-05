@@ -152,13 +152,14 @@ def SIGN( *args ):
         
     for a in args[2:]:
         rtrn_val = _basic_SIGN( rtrn_val, a )
-        
-    rtrn_val = IS_T( rtrn_val )
-    is_zero = AND(*map(IS_F, args))
     
-    rtrn_val = AND( M_SHFT(rtrn_val), NOT(IS_T(is_zero)) )
+    return IS_T( rtrn_val )
+    #rtrn_val = IS_T( rtrn_val )
+    #is_zero = AND(*map(IS_F, args))
     
-    return P_SHFT( rtrn_val )
+    #rtrn_val = AND( M_SHFT(rtrn_val), NOT(IS_T(is_zero)) )
+    
+    #return P_SHFT( rtrn_val )
 
 
 

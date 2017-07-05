@@ -227,19 +227,19 @@ Instruction are conditionally executed based on the values of these flag. Common
         000 & Always & Always \\ \hline
         001 & Equal & \textbf{S} = 1 \\ \hline
         002 & Carry Clear & \textbf{C} = 0 \\ \hline
-        010 & Negative & \textbf{S} = 0 \\ \hline
+        010 & Negative & \textbf{S} = 2 \\ \hline
         011 & Overflow Clear & \textbf{V} = 0 \\ \hline
         012 & Unsigned Lower/Equal & \textbf{C} = 0 \textbf{OR} \textbf{S} = 1 \\ \hline
-        020 & Less Than & IS\_F(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
-        021 & Less Than or Equal To & \textbf{S} = 1 \textbf{OR} IS\_F(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
+        020 & Less Than & IS\_T(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
+        021 & Less Than or Equal To & \textbf{S} = 1 \textbf{OR} IS\_T(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
     
         022-200 & \textit{bad condition code} & \textit{bad condition code} \\ \hline
     
-        201 & Greater Than & \textbf{S} = 1 \textbf{AND} IS\_F(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
-        202 & Greater Than or Equal To & IS\_F(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
+        201 & Greater Than & \textbf{S} $\neq$ 1 \textbf{AND} IS\_T(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
+        202 & Greater Than or Equal To & IS\_T(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
         210 & Unsigned Higher & \textbf{C} $\neq$ 0 \textbf{AND} \textbf{S} $\neq$ 1 \\ \hline
         211 & Overflow Set & \textbf{V} $\neq$ 0 \\ \hline
-        212 & Positive & \textbf{S} = 2 \\ \hline
+        212 & Positive & \textbf{S} $\neq$ 2 \\ \hline
         220 & Carry Set & \textbf{C} $\neq$ 0 \\ \hline
         221 & Not Equal & \textbf{S} $\neq$ 1 \\ \hline
         222 & Never & Never \\ \hline

@@ -38,25 +38,28 @@ Address Modes (AM):
 
 def IMM( REG1, REG2, SHF, VAL_ROT, VAL ):
     rtrn_reg = Rotate_Immediate( VAL_ROT, VAL )
-    return rtrn_reg, 0
+    return rtrn_reg, -1
 IMM.name = 'IMM  '
     
 def REG_DIR( REG1, REG2, SHF, VAL_ROT, VAL ):
     rtrn_reg = Register( REG2 ) # Make a copy of the REG2
-    return rtrn_reg, 0
+    return rtrn_reg, -1
 REG_DIR.name = 'DIR  '
 
 def REG_DIR_SCL( REG1, REG2, SHF, VAL_ROT, VAL ):
     off = Rotate_Immediate( VAL_ROT, VAL )
     
-    if SHF == '0':
-        carry = LSR( off, REG2, off )
-    elif SHF == '1':
-        carry = ASR( off, REG2, off )
+    if off.val != 0:
+        if SHF == '0':
+            carry = LSR( off, REG2, off )
+        elif SHF == '1':
+            carry = ASR( off, REG2, off )
+        else:
+            carry = LSL( off, REG2, off )
+            
+        return off, carry
     else:
-        carry = LSL( off, REG2, off )
-        
-    return off, carry
+        return Register( REG2 ), -1
 REG_DIR_SCL.name = 'DIRSC'
     
 

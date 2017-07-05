@@ -44,7 +44,8 @@ def SUB( dest, src1, src2 ):
     
     over = Gates.AND( Gates.XOR( sign_1, sign_2  ), Gates.NOT( Gates.XOR( sign_2, sign_d ) ) )
     
-    return int(not car), over
+    #return int(not car), over
+    return car, over
 
 #### Shifting Unit ####
 
@@ -60,7 +61,7 @@ def LSL( dest, src1, src2 ):
     # Append zeros to the left
     res += '0' * src2.val
     
-    # Carry is the highest amoung trits shifted out
+    # Carry is the highest among trits shifted out
     car = Gates.OR( *map( int, src1.tern[:src2.val] ) )
         
     dest.tern = res
@@ -69,16 +70,19 @@ def LSL( dest, src1, src2 ):
 
 def LSL( dest, src1, src2 ):
     
-    # Append zeros to the left
+    # Append zeros to the right
     res = src1.tern + '0' * src2.val
     
     dest.tern = res[src2.val:]
+
+    car = res[:src2.val]
     
-    out = res[:src2.val]
-    
-    # Carry is the highest amoung trits shifted out
-    out = Gates.OR( *map( int, out ) )
-    return out
+    if len(car) != 0:
+        # Carry is the last trit shifted out
+        car = int( car[-1] )
+        return car
+    else:
+        return 0 # If no shift happened, carry is zero
 
 '''
 def LSR( dest, src1, src2 ):
@@ -97,16 +101,19 @@ def LSR( dest, src1, src2 ):
 
 def LSR( dest, src1, src2 ):
 
-    # Append zeros to the right
+    # Append zeros to the left
     res = '0' * src2.val + src1.tern
     
     dest.tern = res[:-src2.val]
     
-    out = res[-src2.val:]
+    car = res[-src2.val:]
     
-    # Carry is the highest among trits shifted out
-    out = Gates.OR( *map( int, out ) )
-    return out
+    if len(car) != 0:
+        # Carry is the last trit shifted out
+        car = int( car[0] )
+        return car
+    else:
+        return 0 # If no shift happened, carry is zero
 
 '''
 def ASR( dest, src ):
@@ -132,19 +139,22 @@ def ASR( dest, src1, src2 ):
     #if src1.signed < 0:
     #    sign = '2'
     
-    sign = str( SIGN( src1 ) )
+    sign = str( Gates.SIGN( *[ int( i ) for i in src1.tern ] ) )
 
-    # Append zeros to the right
+    # Append the sign trit to the left
     res = sign * src2.val + src1.tern
     
     # Sign extend if dest reg is bigger size
     dest.tern = sign * ( len( dest.tern ) - len( res[:-src2.val] ) ) + res[:-src2.val]
     
-    out = res[-src2.val:]
+    car = res[-src2.val:]
     
-    # Carry is the highest amoung trits shifted out
-    out = Gates.OR( *map( int, out ) )
-    return out
+    if len(car) != 0:
+        # Carry is the last trit shifted out
+        car = int( car[0] )
+        return car
+    else:
+        return 0 # If no shift happened, carry is zero
     
 def ROT( dest, src1, src2 ):
     
@@ -152,10 +162,14 @@ def ROT( dest, src1, src2 ):
     
     dest.tern = src1.tern[val:] + src1.tern[:val]
     
-    out = src1.tern[:src2.val]
+    car = src1.tern[:val]
     
-    out = Gates.OR( *map( int, out ) )
-    return out
+    if len(car) != 0:
+        # Carry is the last trit shifted out
+        car = int( car[-1] )
+        return car
+    else:
+        return 0 # If no shift happened, carry is zero
     
 #### Logic Unit ####
 
@@ -267,8 +281,15 @@ def CLEAR( dest ):
 # Returns the sign of the value in the register, 0 for positive, 1 for zero, 2 for negative.
 def SIGN( reg ):
     
-    sign = Gates.SIGN( *[ int( i ) for i in reg.tern ] )
-    return sign
+    trits = [ int( i ) for i in reg.tern ]
+    
+    sign = Gates.SIGN( *trits )
+    
+    is_zero = Gates.AND( *[ Gates.IS_F( i ) for i in trits ] )
+    
+    rtrn_val = Gates.AND( Gates.M_SHFT(sign), Gates.NOT(Gates.IS_T(is_zero)) )
+    
+    return Gates.P_SHFT( rtrn_val )
     
     
     
