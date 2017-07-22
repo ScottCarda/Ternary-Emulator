@@ -1,7 +1,7 @@
 from ..Exceptions import RegisterAssignmentError, RegisterSizeError
 
 TRYTE_TRYB = 3 # Number of Trybles in a Tryte, must be pow of 3
-TRYB_TRIT = 3 # Number of Trites in a Tryble, must be pow of 3
+TRYB_TRIT = 3 # Number of trits in a Tryble, must be pow of 3
 
 WORD_SIZE = 3 # Number of Trytes in a typical register
 
@@ -46,7 +46,7 @@ class Register(object):
         return self.size * TRYTE_TRYB
     
     @property
-    def trites(self):
+    def trits(self):
         return self.trybles * TRYB_TRIT
     
     @property
@@ -60,18 +60,18 @@ class Register(object):
         elif IsHept( val ):
             self.__val = HeptToDec( val[-self.trybles:] )
         elif IsTern( val ):
-            self.__val = TernToDec( val[-self.trites:] )
+            self.__val = TernToDec( val[-self.trits:] )
         elif type(val) is int:
             if val < 0:
-                self.__val = SignedToUnsigned( val, self.trites )
+                self.__val = SignedToUnsigned( val, self.trits )
             else:
-                self.__val = val % 3**self.trites
+                self.__val = val % 3**self.trits
         else:
             raise RegisterAssignmentError( val )
             
     @property
     def signed(self):
-        return UnsignedToSigned( self.__val, self.trites )
+        return UnsignedToSigned( self.__val, self.trits )
         
     @signed.setter
     def signed(self, val):
@@ -87,7 +87,7 @@ class Register(object):
             
     @property
     def tern(self):
-        return DecToTern( self.__val, self.trites )
+        return DecToTern( self.__val, self.trits )
         
     @tern.setter
     def tern(self, val):
