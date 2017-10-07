@@ -118,7 +118,7 @@ def do_instr( self, instr ):
     else: # manage jump special case
         # JUMP doesn't modify CPSR or use OPR1, so PC is used instead
         tCPSR = self.PC # This is the one that gets modified
-        tOPR1 = self.PC # This is the one that gets read from
+        tOPR1 = self.PC # This is the one that gets read
     
         # set flag determines tCPSR and tDEST
         if instr.set_flag == '0': # CASE S = '0': don't capture value of PC

@@ -196,17 +196,23 @@ Heptavigesimal Numbering System
     
 \section{Conditions} \label{sec:Conditions}
 
-The Current Program Status Register or CPSR is a special 3-trit register that keeps track of several flags. There are three flag, one associated with each of the three trits in the register. The most significant trit is the \textbf{S} flag, which indicates the sign of the result of an operation. \hyperref[tab:S Values]{Table \ref{tab:S Values}} shows the meaning of the values for the \textbf{S} flag. The middle of the three trits is the \textbf{C} flag, which contains the value of any unsigned overflow resulting from an operation. The least significant trit is the \textbf{V} flag, which contains the value of any signed overflow resulting from an operation.
+The Current Program Status Register or CPSR is a special 3-trit register that keeps track of several
+flags. There are three flag, one associated with each of the three trits in the register. The most
+significant trit is the \textbf{S} flag, which indicates the sign of the result of an operation.
+\hyperref[tab:S Flag Values]{Table \ref{tab:S Flag Values}} shows the meaning of the values for the
+\textbf{S} flag. The middle of the three trits is the \textbf{C} flag, which contains the value of
+any unsigned overflow resulting from an operation. The least significant trit is the \textbf{V} flag,
+which contains the value of any signed overflow resulting from an operation.
 
 \begin{table}[h!]
     \centering
     %\caption{\textbf{S} Flag Values}
     \caption{}
-    \label{tab:S Values}
+    \label{tab:S Flag Values}
     \begin{tabular}{|c|l|} 
         \hline
         %\textbf{S} & Meaning \\ [0.5ex] \hline
-        \textbf{S} & Meaning \\ \hline
+        \textbf{S} Flag & Meaning \\ \hline
         0 & Result was Positive \\ \hline
         1 & Result was Zero \\ \hline
         %2 & Result was Negative \\ [1ex] \hline
@@ -214,7 +220,14 @@ The Current Program Status Register or CPSR is a special 3-trit register that ke
     \end{tabular}
 \end{table}
 
-Instruction are conditionally executed based on the values of these flag. Common conditions have been abstracted from these flag and made available to the system. Each condition is assigned a 3-trit code for use in the most significant field of an instruction. If the condition is false, the rest of the instruction is ignored, and the machine will move on to the next instruction in its RAM without executing the encoded operation. The conditions available to the system are found in \hyperref[tab:Conditions]{Table \ref{tab:Conditions}}.
+Instruction are conditionally executed based on the values of these flag. Common conditions have been
+abstracted from these flag and made available to the system. Each condition is assigned a 3-trit code
+for use in the most significant field of an instruction. If the condition is false, the rest of the
+instruction is ignored, and the machine will move on to the next instruction in its RAM without executing
+the encoded operation. The conditions available to the system are found in
+\hyperref[tab:Conditions]{Table \ref{tab:Conditions}}. As this is a 3-trit code, each of these condition
+codes can be represented as a single heptavigesimal character, which are found in parentheses in the
+first column of the table.
 
 \begin{table}[h!]
     \centering
@@ -224,37 +237,188 @@ Instruction are conditionally executed based on the values of these flag. Common
         \hline
         \textbf{Condition Code} & Meaning & Flags \\ \hline
         
-        000 & Always & Always \\ \hline
-        001 & Equal & \textbf{S} = 1 \\ \hline
-        002 & Carry Clear & \textbf{C} = 0 \\ \hline
-        010 & Negative & \textbf{S} = 2 \\ \hline
-        011 & Overflow Clear & \textbf{V} = 0 \\ \hline
-        012 & Unsigned Lower/Equal & \textbf{C} = 0 \textbf{OR} \textbf{S} = 1 \\ \hline
-        020 & Less Than & IS\_T(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
-        021 & Less Than or Equal To & \textbf{S} = 1 \textbf{OR} IS\_T(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
+        000 (@) & Always & Always \\ \hline
+        001 (A) & Equal & \textbf{S} = 1 \\ \hline
+        002 (B) & Carry Clear & \textbf{C} = 0 \\ \hline
+        010 (C) & Negative & \textbf{S} = 2 \\ \hline
+        011 (D) & Overflow Clear & \textbf{V} = 0 \\ \hline
+        012 (E) & Unsigned Lower/Equal & \textbf{C} = 0 \textbf{OR} \textbf{S} = 1 \\ \hline
+        020 (F) & Less Than & IS\_T(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
+        021 (G) & Less Than or Equal To & \textbf{S} = 1 \textbf{OR} IS\_T(\textbf{S}) = IS\_F(\textbf{V}) \\ \hline
     
-        022-200 & \textit{bad condition code} & \textit{bad condition code} \\ \hline
+        022-200 (H-R) & \textit{bad condition code} & \textit{bad condition code} \\ \hline
     
-        201 & Greater Than & \textbf{S} $\neq$ 1 \textbf{AND} IS\_T(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
-        202 & Greater Than or Equal To & IS\_T(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
-        210 & Unsigned Higher & \textbf{C} $\neq$ 0 \textbf{AND} \textbf{S} $\neq$ 1 \\ \hline
-        211 & Overflow Set & \textbf{V} $\neq$ 0 \\ \hline
-        212 & Positive & \textbf{S} $\neq$ 2 \\ \hline
-        220 & Carry Set & \textbf{C} $\neq$ 0 \\ \hline
-        221 & Not Equal & \textbf{S} $\neq$ 1 \\ \hline
-        222 & Never & Never \\ \hline
+        201 (S) & Greater Than & \textbf{S} $\neq$ 1 \textbf{AND} IS\_T(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
+        202 (T) & Greater Than or Equal To & IS\_T(\textbf{S}) $\neq$ IS\_F(\textbf{V}) \\ \hline
+        210 (U) & Unsigned Higher & \textbf{C} $\neq$ 0 \textbf{AND} \textbf{S} $\neq$ 1 \\ \hline
+        211 (V) & Overflow Set & \textbf{V} $\neq$ 0 \\ \hline
+        212 (W) & Positive & \textbf{S} $\neq$ 2 \\ \hline
+        220 (X) & Carry Set & \textbf{C} $\neq$ 0 \\ \hline
+        221 (Y) & Not Equal & \textbf{S} $\neq$ 1 \\ \hline
+        222 (Z) & Never & Never \\ \hline
     \end{tabular}
 \end{table}
 
 \section{Operations} \label{sec:Operations}
 
+\begin{table}[h!]
+    \centering
+    \caption{}
+    \label{tab:Opcodes}
+    \begin{tabular}{|c|l|c|} 
+        \hline
+        \textbf{Operation Code} & Operation \\ \hline
+
+        000 (@) & HALT \\ \hline
+        001 (A) & NO\_OP \\ \hline
+        002 (B) & CLEAR \\ \hline
+
+        010 (C) & LOAD \\ \hline
+        011 (D) & STORE \\ \hline
+        012 (E) & EXCHANGE \\ \hline
+
+        020 (F) & ADD \\ \hline
+        021 (G) & SUB \\ \hline
+        022 (H) & MOVE \\ \hline
+
+        100 (I) & AND \\ \hline
+        101 (J) & OR \\ \hline
+        102 (K) & XOR \\ \hline
+
+        110 (L) & F\_NOT \\ \hline
+        111 (M) & N\_NOT \\ \hline
+        112 (N) & T\_NOT \\ \hline
+
+        120 (O) & ISF \\ \hline
+        121 (P) & ISN \\ \hline
+        122 (Q) & IST \\ \hline
+
+        200 (R) & LSR \\ \hline
+        201 (S) & ASR \\ \hline
+        202 (T) & LSL \\ \hline
+
+        210 (U) & SHIFT\_M \\ \hline
+        211 (V) & SHIFT\_P \\ \hline
+        212 (W) & \textit{bad operation code} \\ \hline
+
+        220 (X) & JUMP \\ \hline
+        221 (Y) & \textit{bad operation code} \\ \hline
+        222 (Z) & \textit{bad operation code} \\ \hline
+    \end{tabular}
+\end{table}
+
 \section{Flag Mode} \label{sec:Flag Mode}
+
+This is a single-trit field in the instruction that denotes the flag mode for the instruction. There are
+three flag modes that can be used, the value this field takes for each mode is outlined in
+\hyperref[tab:S Field Values]{Table \ref{tab:S Field Values}}. 'No-Set' mode will prevent the instruction from
+affecting the CPSR register flags. 'Set' mode will allow for the instruction to set the flags in the CPSR
+register. 'Exclusive-Set' mode will allow for the instruction to set the flags in the CPSR register, while
+throwing out the usual result of the instruction, instead of storing it to the destination register.
+
+\begin{table}[h!]
+    \centering
+    %\caption{\textbf{S} Flag Values}
+    \caption{}
+    \label{tab:S Field Values}
+    \begin{tabular}{|c|l|}
+        \hline
+        \textbf{S} Field & Flag Mode \\ \hline
+        0 & Result was No-Set \\ \hline
+        1 & Result was Set \\ \hline
+        2 & Result was Exclusive-Set \\ \hline
+    \end{tabular}
+\end{table}
+
+The jump instruction has speacial logic associated with this field. As the jump instruction cannot
+affect the CPSR flags, the regular flag modes are not applicable. Instead this value is used to
+determine how to handle capturing the current value in the PC register. If the value of this field
+is 0, the current location in code, before the jump, is not recorded, and Destination field is
+ignored. If the value is 1, the current location in code, before the jump, is stored in the register
+denoted in the Destination field. This is done to make it easier to implement functions by capturing
+where the function will return to. If the value of the field is 2, the jump will not affect the PC
+register, resulting in no jump in code, but will store the current value in the PC register in
+the register denoted in the Destination field.
 
 \section{Address Mode} \label{sec:Address Mode}
 
+There are 8 address modes, which are listed in table
+\hyperref[tab:Address Modes]{Table \ref{tab:Address Modes}}. The first 3 address modes, 00 through 02,
+are used by non-addressing operations, such as add or sub. The last 5 address modes are used by
+addressing instructions, such as ldr and str. The address mode dictates the value of the
+second argument to the operation, or the only argument to the operation for operations that
+only have one argument. For addressing operations, this value must be an address.
+
+\begin{table}[h!]
+    \centering
+    \caption{}
+    \label{tab:Address Modes}
+    \begin{tabular}{|c|l|}
+        \hline
+        \textbf{AM} Field & Address Mode \\ \hline
+        00 & Immediate \\ \hline
+        01 & Register Direct \\ \hline
+        02 & Register Direct Scaled \\ \hline
+        10 & \textit{bad address mode} \\ \hline
+        11 & Addressed \\ \hline
+        12 & Register Indirect \\ \hline
+        20 & Immediate Offset \\ \hline
+        21 & Direct Offset \\ \hline
+        22 & Scaled Offset \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{description}
+\item[Immediate] The value of the immediate field is used as the argument.
+\item[Register Direct] The value of the register indicated by Arg 2 is used as the argument.
+\item[Register Direct Scaled] The value of the register indicated by Arg 2 undergoes a shift
+operation, indicated by the instruction's shift mode, whose magnitude is the value of the
+immediate field. The result is used as the argument.
+\item[Addressed] The value of the immediate field is the address used as the argument.
+\item[Register Indirect] The address found in the register indicated by Arg 1 is used as the
+argument.
+\item[Immediate Offset] The sum of the address found in the register indicated by Arg 1 and
+the value of the immediate field is the address used as the argument.
+\item[Direct Offset] The sum of the address found in the register indicated by Arg 1 and the
+value of the register indicated by Arg 2 is the address used as the argument.
+\item[Scaled Offset] The value of the register indicated by Arg 2 undergoes a shift operation,
+indicated by the instruction's shift mode, whose magnitude is the value of the immediate field.
+The result is added to the address found in the register indicated by Arg 1, resulting in the
+address used as the argument.
+\end{description}
+
 \section{Shift Mode} \label{sec:Shift Mode}
 
+This is a single-trit field in the instruction that denotes the flag mode for the instruction.
+There are three flag modes that can be used, the value this field takes for each mode is
+outlined in \hyperref[tab:Shift Modes]{Table \ref{tab:Shift Modes}}. There are two address
+modes which perform a scaling operation, Register Direct Scaled and Scaled Offset. In these
+address modes the value of the register indicated by Arg 2 undergoes a shift operation whose
+magnitude is the value of the immediate field. The shift mode indicates which shift operation
+is performed during these instructions.
+
+\begin{table}[h!]
+    \centering
+    \caption{}
+    \label{tab:Shift Modes}
+    \begin{tabular}{|c|l|}
+        \hline
+        \textbf{Sh} Field & Shift Mode \\ \hline
+        0 & Logical Shift Right \\ \hline
+        1 & Arithmetic Shift Right \\ \hline
+        2 & Logical Shift Left \\ \hline
+    \end{tabular}
+\end{table}
+
 \section{Immediate Value} \label{sec:Immediate Value}
+
+The last 11 trits of an instruction represent a numerical value embedded in the
+instruction. This field is further subdivided into a rotation field, which is the
+first 2 trits, and the value field, which is the remaining 9 trits. The number that
+the immediate represents is calculated by treating the value field as the least
+significant 9 trits in a 27-trit number. That number is then rotated to the right
+by 3 times the number specified in the rotation field. The resulting number may be 
+interpreted as a signed or unsigned number depending on its use.
 
 \section{Raw} \label{sec:Raw}
     
