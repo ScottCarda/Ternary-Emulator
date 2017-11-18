@@ -167,9 +167,57 @@ splittopskip = \topskip
 
 \section{Ternary Logic} \label{sec:Logic}
 
+While the base unit of binary computers is a bit, having two states, the base unit of ternary
+computers is a trit, having three states. These states are represented in two ways: as the
+numbers 0, 1, and 2, and and the truth values False, Neutral, and True, or F, N, and T,
+respectively. The mapping between these two representations is 0 = F, 1 = N, and 2 = T.
+
+\subsection{Representation}
+
+Trits can be agglomerated into larger units called trytes, a tryte containing nine trits,
+having $3^{9}$ states. This is the ternary complement to the binary byte. Because this is a
+large number of bits, it is advantageous to use a more compact way of representing trytes rather
+than spelling out the value of each trit. One way of accomplishing this is to interpret the
+series of trits as digits of a number represented in the number base 3, and convert the number
+to base 10. In this way, groups of trits can represent large numbers. This conversion, while
+human readable, is too computationally intensive and inefficient to be used to significant degree
+internally in the emulator. We will use the heptavigesimal numbering system, or hept for short,
+which is base 27. Because the hept is base 27, which is a power of 3, the representation will map
+directly to the values of the trits, unlike base 10. A single character in the hept system will
+represent all 27 possible states of a group of three trits, so we will need three hept characters
+to represent one tryte. The characters we will use for our implementation of the hept system will
+start with the ampersat, or the “@” symbol, representing the zero state. Then states 1 through 26,
+those being the base 10 conversions of the numbers acquired from interpreting the trits as base 3
+numbers, will be represented by the letters A-Z of the alphabet, respectively.
+
+\subsection{Logic Gates}
+
+The three-valued nature of the trits makes them incompatible with the traditional binary logic
+gates. A new set of logic gates must be used to construct logic on a ternary machine. We will be
+using truth tables to represent the logic of an individual gate. For single input gates, the left
+column represents the single trit input into the gate, and the right column represents the single
+trit output. For two input gates, the leftmost column acts as an axis and represents the first of
+the two trit inputs. The topmost row acts as an axis and represents the second of the two trit
+inputs. The rest of the table represents the output values of the single output trit. The following
+are several logic gates that are defined:
+
+
+
 \section{The Emu Emulator} \label{sec:Emu}
 
-Heptavigesimal Numbering System
+The Emu Emulator is an emulator for a ternary computing system. It uses a 27-trit instruction
+set, and a word in this machine is 27 trits, or three trytes. The 9 programmable index registers,
+as well as the program counter, or PC, are all single word registers. The current program status
+register, or CPSR, is a register with three trits flags in it that keep track of the qualities of
+the results of certain operations, which can be used to dictate the program flow. Programs are
+stored in RAM as a series of instructions and data. RAM is a 27-trit address space that is
+word-addressable.
+
+The Emu emulator can be used in a python script by importing the Emulator package. Create an Emu
+object, then use the member function “read\_object”, passing the path to an object file, prepared
+ahead of time, as a string. This will read the program, represented by the object file, into the
+RAM of the Emu object. Finally, call the member function “start” to have the program executed by
+the Emu Emulator object.
 
 \section{Instruction Format} \label{sec:Format}
                
@@ -261,6 +309,9 @@ first column of the table.
 
 \section{Operations} \label{sec:Operations}
 
+The emulator supports 24 operations, which are listed in \hyperref[tab:Opcodes]{Table \ref{tab:Opcodes}} along
+with their associated opcodes.
+
 \begin{table}[h!]
     \centering
     \caption{}
@@ -285,9 +336,9 @@ first column of the table.
         101 (J) & OR \\ \hline
         102 (K) & XOR \\ \hline
 
-        110 (L) & F\_NOT \\ \hline
-        111 (M) & N\_NOT \\ \hline
-        112 (N) & T\_NOT \\ \hline
+        110 (L) & FNOT \\ \hline
+        111 (M) & NNOT \\ \hline
+        112 (N) & TNOT \\ \hline
 
         120 (O) & ISF \\ \hline
         121 (P) & ISN \\ \hline
@@ -306,6 +357,53 @@ first column of the table.
         222 (Z) & \textit{bad operation code} \\ \hline
     \end{tabular}
 \end{table}
+
+\begin{description}
+\item[HALT] Raises a HALT exception, causing the current program to stop executing.
+This should be considered the proper way for a program to terminate.
+\item[NO\_OP] Will not perform any operation, other than to move the current program counter to the
+next instruction.
+\item[CLEAR] Sets the word of memory at the specified address to all zeros, clearing the memory location.
+\item[LOAD] Loads the word of memory at the specified address into the destination register.
+\item[STORE] Stores the contents of the destination register into memory at the specified address.
+The register specified by the \textbf{Dest} field is actually used as the data source in this instruction.
+\item[EXCHANGE] Loads the word of memory at the specified address into the destination register,
+while storing the original value of the destination register at the specified address in memory,
+effectively swapping the two values.
+\item[ADD] Adds together the values in the registers specified by \textbf{Arg1} and \textbf{Arg2},
+storing the result in the destination register.
+\item[SUB] Subtracts the value in the register specified by \textbf{Arg2} from the value in the register
+specified by \textbf{Arg2}, storing the result in the destination register.
+\item[MOVE] Copies the value specified into the destination register.
+\item[AND] Tritwise AND the values in the registers specified by \textbf{Arg1} and \textbf{Arg2},
+storing the result in the destination register.
+\item[OR] Tritwise OR the values in the registers specified by \textbf{Arg1} and \textbf{Arg2},
+storing the result in the destination register.
+\item[XOR] Tritwise XOR the values in the registers specified by \textbf{Arg1} and \textbf{Arg2},
+storing the result in the destination register.
+\item[FNOT] Tritwise FNOT the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[NNOT] Tritwise NNOT the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[TNOT] Tritwise TNOT the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[ISF] Tritwise ISF the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[ISN] Tritwise ISN the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[IST] Tritwise IST the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[LSR] Shifts all the trit values in the register specified by \textbf{Arg1} to the right by
+the specified number of trits, resulting in a division of the number by a power of three. The result is
+stored in the destination register. The trit value shifted into the most significant trit will be zero.
+\item[ASR] Shifts all the trit values in the register specified by \textbf{Arg1} to the right by
+the specified number of trits, resulting in a division of the number by a power of three. The result is
+stored in the destination register. The trit value shifted into the most significant trit will be two
+if the original value was negative, or zero otherwise, preserving the sign of the value. 
+\item[LSL] Shifts all the trit values in the register specified by \textbf{Arg1} to the left by
+the specified number of trits, resulting in a multiplication of the number by a power of three. The
+result is stored in the destination register. The trit value shifted into the most significant trit will
+be zero.
+\item[SHIFT\_M] Tritwise SHIFT\_M the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[SHIFT\_P] Tritwise SHIFT\_P the value in the register specified by \textbf{Arg2}, ignoring \textbf{Arg1}.
+\item[JUMP] Puts the value of the register specified by \textbf{Arg2} into the PC register, causing the
+program execution to jump to that address in RAM. This operation has special logic associated with the
+flag mode of the instruction.
+\end{description}
 
 \section{Flag Mode} \label{sec:Flag Mode}
 
@@ -419,112 +517,6 @@ the immediate represents is calculated by treating the value field as the least
 significant 9 trits in a 27-trit number. That number is then rotated to the right
 by 3 times the number specified in the rotation field. The resulting number may be 
 interpreted as a signed or unsigned number depending on its use.
-
-\section{Raw} \label{sec:Raw}
-    
-27 trits
-  xxx   xxx  x  xx  xx  xx   xx   x  xx-xxxxxxxxx
- cond opcode s arg1 AM arg2 arg3 shf  val 
-               dest    opr1 opr2
-    
-Conditions:
-    
-    000:    Always
-    001:    Equal ( S flag = 1 )
-    002:    Carry Clear ( C flag = 0 )
-    010:    Negative ( S flag = 0 )
-    011:    Overflow Clear ( V flag = 0 )
-    012:    Unsigned Lower ( C flag = 0, OR S flag = 1 )
-    020:    $<$ ( IS\_F(S flag) = IS\_F(V flag) )    
-    021:    $<=$ ( S flag = 1 OR IS\_F(S flag) = IS\_F(V flag) )
-    
-    022-200:   $<$bad$>$
-    
-    201:    $>$ ( S flag = 1 AND IS\_F(S flag) != IS\_F(V flag) )
-    202:    $>=$ ( IS\_F(S flag) != IS\_F(V flag) )
-    210:    Unsigned Higher ( C flag != 0 AND S flag != 1 )
-    211:    Overflow Set ( V flag != 0 )
-    212:    Positive ( S flag != 0 ) - maybe: ( S flag = 2 )
-    220:    Carry Set ( C flag != 0 )
-    221:    Not Equal ( S flag != 1 )
-    222:    Never
-        
-Shift Values:
-
-    0: LSR
-    1: ASR
-    2: LSL
-        
-Address Modes (AM):
-    
-    00:     Immediate -         Data found in Instruction ( val ) - Ignore opr2 and shf
-        MOV     r0, $\#$3          000 022 0 00 00 xx xx x 00-000000010 = 00002200000xxxxx00000000010
-        ADD     r0, r1, $\#$3      000 020 0 00 00 01 xx x 00-000000010 = 0000200000001xxx00000000010
-        
-    01:     Reg Direct -        Register of Data found in Instruction ( opr2 ) - Ignore shf and val
-        MOV     r0, r1          000 022 0 00 01 xx 01 x xx-xxxxxxxxx = 00002200001xx01xxxxxxxxxxxx
-        
-    02:     Reg Dir Scalled -   Register of Data and Scale found in Instruction ( val )
-        ADD     r0, r1, r2, LSL $\#$15
-                                000 020 0 00 02 01 02 2 00-000000120 = 000020000020102200000000120
-    
-    10:     $<$bad$>$
-        
-    11:     Addressed -         Address of Data found in Instruction ( val ) - Ignore opr1, opr2, and shf
-        LDR     r0, [$\#$$<$address$>$]
-                                000 010 0 00 11 xx xx x ss-$<$address$>$ = 00001000011xxxxxss$<$address$>$
-        
-    12:     Reg Indirect -      Address of Data stored in Register found in Instruction ( opr1 ) - Ignore opr2, shf, and val
-        LDR     r0, [r1]        000 010 0 00 12 01 xx x xx-xxxxxxxxx = 0000100001201xxxxxxxxxxxxxx
-        
-    20:     -w/ Imm Offset -    Reg Indirect Address plus Offset found in Instruction ( Reg: opr1, Off: val ) - Ignore opr2 and shf
-        LDR     r0, [r1, $\#$3]    000 010 0 00 20 01 xx x 00-000000010 = 0000100002001xxx00000000010
-        
-    21:     -w/ Dir Offset -    Reg Indirect Address plus Offset found in Reg in Instruction ( Reg: opr1, Off: opr2 ) - Ignore shf and val
-        LDR     r0, [r1, r2]    000 010 0 00 21 01 02 x xx-xxxxxxxxx = 000010000210102xxxxxxxxxxxx
-                                
-    22:     -w/ Scaled Offset - Reg Indirect Address plus Scaled Offset found in Reg in Instruction, Scale is found in Instruction
-                                ( Reg: opr1, Off: opr2, Scale: val )
-        LDR     r0, [r1, r2, LSL $\#$1]
-                                000 010 0 00 22 01 02 2 00-000000001 = 000010000220102200000000001
-    
-Opcodes:
-
-    (@) 000: HALT
-    (A) 001: NO\_OP
-    (B) 002: CLEAR
-
-    (C) 010: LOAD
-    (D) 011: STORE
-    (E) 012: EXCHANGE
-
-    (F) 020: ADD
-    (G) 021: SUB
-    (H) 022: MOVE
-
-    (I) 100: AND
-    (J) 101: OR
-    (K) 102: XOR
-
-    (L) 110: F\_NOT
-    (M) 111: N\_NOT
-    (N) 112: T\_NOT
-
-    (O) 120: ISF
-    (P) 121: ISN
-    (Q) 122: IST
-
-    (R) 200: LSR
-    (S) 201: ASR
-    (T) 202: LSL
-
-    (U) 210: SHIFT\_M
-    (V) 211: SHIFT\_P
-    (W) 212: $<$bad$>$
-
-    (X) 220: JUMP
-    (Y) 221: $<$bad$>$
-    (Z) 222: $<$bad$>$
 
 %\include{Sections/Bloch_Sphere}
 
